@@ -1,0 +1,4 @@
+Release history for {{$dist->name}}
+
+{{$NEXT}}
+          * the first release after years of internal use and evolution
