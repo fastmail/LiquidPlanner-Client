@@ -178,7 +178,7 @@ sub upcoming_task_groups_for_member_id ($self, $member_id, $limit = 200) {
 }
 
 sub start_timer_for_task_id ($self, $task_id) {
-  my $start_res = $self->http_request(POST => "/tasks/$task_id/timer/start");
+  my $start_res = $self->http_request(POST => "/tasks/$task_id/timer/start", '{}');
   $start_res->then(sub ($data) {
     return Future->fail("new timer not running?!") unless $data->{running};
     return Future->done($data);
@@ -186,11 +186,11 @@ sub start_timer_for_task_id ($self, $task_id) {
 }
 
 sub stop_timer_for_task_id ($self, $task_id) {
-  return $self->http_request(POST => "/tasks/$task_id/timer/stop");
+  return $self->http_request(POST => "/tasks/$task_id/timer/stop", '{}');
 }
 
 sub clear_timer_for_task_id ($self, $task_id) {
-  return $self->http_request(POST => "/tasks/$task_id/timer/clear");
+  return $self->http_request(POST => "/tasks/$task_id/timer/clear", '{}');
 }
 
 sub track_time ($self, $arg) {
