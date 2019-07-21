@@ -91,6 +91,31 @@ my sub _includify ($query, $include) {
   return;
 }
 
+sub timesheet_entries ($self, $arg) {
+  for (qw(start_date end_date)) {
+    return Future->fail("no $_ provided") unless $arg->{$_};
+  }
+
+  my $query = URI->new("/timesheet_entries");
+  $query->query_param(start_date => $arg->{start_date});
+  $query->query_param(end_date   => $arg->{end_date});
+
+  $query->query_param(member_id => $arg->{member_ids}[0])
+    if $arg->{member_ids}->@* == 1;
+
+  my %want_member_id;
+  %want_member_id = map {; $_ => 1 } $arg->{member_ids}->@*
+    if $arg->{member_ids};
+
+  my $get = $self->http_request(GET => $query);
+  $get->then(sub ($data) {
+    if (%want_member_id) {
+      @$data = grep {; $want_member_id{$_->{member_id}} } @$data;
+    }
+    return Future->done($data);
+  });
+}
+
 sub get_clients ($self) {
   $self->http_request(GET => "/clients");
 }
