@@ -488,6 +488,37 @@ package LiquidPlanner::Client::IterationHelper {
   }
 }
 
+sub new_standalone ($class, @rest) {
+  LiquidPlanner::Client::Standalone->new(@rest);
+}
+
+package LiquidPlanner::Client::Standalone {
+
+  use Moose;
+  extends 'LiquidPlanner::Client';
+
+  has loop => (
+    is => 'ro',
+    default => sub {
+      require IO::Async::Loop;
+      IO::Async::Loop->new;
+    },
+  );
+
+  has '+http_client' => (
+    lazy => 1,
+    default => sub {
+      require Net::Async::HTTP;
+      my $http_client = Net::Async::HTTP->new(max_connections_per_host => 5);
+      $_[0]->loop->add($http_client);
+      return $http_client;
+    },
+  );
+
+  no Moose;
+  __PACKAGE__->meta->make_immutable;
+}
+
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
