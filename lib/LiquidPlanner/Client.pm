@@ -178,7 +178,7 @@ sub query_items ($self, $arg) {
     # /treeitems?filter[]=is_done+is+false&filter[]=item_type+is+Task <- slower
     #     /tasks?filter[]=is_done+is+false&filter[]=item_type+is+Task <- slower
     #     /tasks?filter[]=is_done+is+false                            <- faster
-    if (@$filter == 3 && $filter->[0] eq 'item_type' && $filter->[1] eq 'is') {
+    if (!$arg->{in} && @$filter == 3 && $filter->[0] eq 'item_type' && $filter->[1] eq 'is') {
       $type{$filter->[2]} = 1;
     } else {
       $query->query_param_append('filter[]' => $string);
