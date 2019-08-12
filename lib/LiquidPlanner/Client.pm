@@ -128,6 +128,21 @@ sub get_item ($self, $item_id, $arg = {}) {
        ->then(sub ($data) { Future->done($data->[0]) });
 }
 
+sub get_items ($self, $item_ids, $arg = {}) {
+  my $idstr = join q{,}, @$item_ids;
+  my $query = URI->new("/treeitems/?filter[]=id=$idstr");
+  _includify($query, $arg->{include});
+
+  $self
+    ->http_request(GET => $query)
+    ->then(sub ($data) {
+        return Future->done({
+          (map {; $_ => undef } @$item_ids),
+          (map {; $_->{id} => $_ } @$data)
+        });
+    });
+}
+
 sub update_item ($self, $item_id, $payload) {
   return $self->http_put(
     "/tasks/$item_id",
