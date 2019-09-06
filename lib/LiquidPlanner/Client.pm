@@ -146,11 +146,7 @@ sub get_items ($self, $item_ids, $arg = {}) {
 }
 
 sub update_item ($self, $item_id, $payload) {
-  return $self->http_put(
-    "/tasks/$item_id",
-    content_type => 'application/json',
-    content => $JSON->encode($payload),
-  );
+  return $self->http_request(PUT => "/tasks/$item_id", $JSON->encode($payload));
 }
 
 has single_activity_id => (
