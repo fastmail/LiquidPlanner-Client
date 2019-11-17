@@ -129,6 +129,8 @@ sub get_item ($self, $item_id, $arg = {}) {
 }
 
 sub get_items ($self, $item_ids, $arg = {}) {
+  return Future->done({}) unless @$item_ids;
+
   my $idstr = join q{,}, @$item_ids;
   my $query = URI->new("/treeitems/?filter[]=id=$idstr");
   _includify($query, $arg->{include});
