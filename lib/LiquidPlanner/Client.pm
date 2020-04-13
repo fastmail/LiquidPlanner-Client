@@ -1,4 +1,4 @@
-use v5.24.0;
+use v5.20.0;
 use warnings;
 package LiquidPlanner::Client;
 # ABSTRACT: a so-so, asynchronous API client for LiquidPlanner
@@ -6,7 +6,7 @@ package LiquidPlanner::Client;
 use Moose;
 use utf8;
 
-use experimental qw(signatures lexical_subs);
+use experimental qw(postderef signatures lexical_subs);
 use namespace::clean;
 use JSON::MaybeXS;
 use DateTime;
